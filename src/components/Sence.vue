@@ -76,12 +76,11 @@ const initModel = () => {
   // modelLoader.loadModelToScene('/models/zuo.glb', baseModel => {
   //   console.log(baseModel, '1111111');
     
-
-  //   baseModel.setScalc(0.3);
+  //   baseModel.setScalc(0.01);
   //   const model = baseModel.gltf.scene;
   //   office = baseModel;
   //   office.object.rotation.y = Math.PI;
-  //   office.object.position.set(0, 0, 0);
+  //   office.object.position.set(2, 0, 0);
   //   // model.position.set(80, 2, 90);
   //   office.object.children.forEach((item: any) => {
   //     item.name = item.name.replace('zuo', '');
@@ -102,19 +101,17 @@ const initModel = () => {
   //   model.traverse(item => {
   //     list.push(item);
   //   });
-  //   // viewer.setRaycasterObjects(list);
+  //   viewer.setRaycasterObjects(list);
   // });
 
   modelLoader.loadModelToScene('/models/plane.glb', baseModel => {
-    console.log(baseModel, '1111111');
-    
     const model = baseModel.gltf.scene;
     model.scale.set(0.0001 * 3, 0.0001 * 3, 0.0001 * 3)
     model.position.set(0, 0, 0);
     model.name = 'plane';
     baseModel.openCastShadow();
 
-    const texture = baseModel.object.children[0].material.map
+    const texture = baseModel.object.children[0].material.map;
     console.log(texture, 'texture-------');
     const fnOnj = planeAnimate(texture);
     viewer.addAnimate(fnOnj);
@@ -346,24 +343,6 @@ const selectOffice = (model: any) => {
       }
     }
   });
-  // gsap.to(viewer.controls.target, {
-  //   x: 12,
-  //   y: 0,
-  //   z: -5,
-  //   duration: 2,
-  //   ease: "power1.inOut",
-  //   onComplete: () => {
-  //   },
-  // });
-  // gsap.to(viewer.camera.position, {
-  //   x: 12,
-  //   y: 18,
-  //   z: 38,
-  //   duration: 2,
-  //   ease: "power1.inOut",
-  //   onComplete: () => {
-  //   },
-  // });
 };
 
 </script>

@@ -46,7 +46,7 @@ defineExpose({
   position: absolute;
   background-color: rgb(29 78 216 / 0.6);
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 0.2rem;
   color: #fff;
 }
 .popover-title {

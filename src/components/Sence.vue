@@ -9,8 +9,9 @@
 </template>
 
 <script lang="ts" setup name="Sence">
+/* eslint-disable */
 import { ref, onMounted, type Ref } from 'vue';
-import Viewer from '@/modules/Viewer';
+import Viewer, { type Animate } from '@/modules/Viewer';
 import Floors from '@/modules/Floors';
 import ModelLoader from '@/modules/ModelLoder';
 import * as THREE from 'three';
@@ -51,18 +52,17 @@ onMounted(() => {
 
 const init = () => {
   viewer = new Viewer('three');
-  viewer.addAxis();
-  viewer.addStats();
+  // viewer.addAxis();
+  // viewer.addStats();
   viewer.initRaycaster();
 
   modelLoader = new ModelLoader(viewer);
-  const floors = new Floors(viewer);
-  floors.addGird();
+  // const floors = new Floors(viewer);
+  // floors.addGird();
 
   boxHelperWrap = new BoxHelperWrap(viewer);
 
   viewer.emitter.on(Event.dblclick.raycaster, (list: THREE.Intersection[]) => {
-    console.log(list, '2222222222');
     onMouseClick(list);
   });
 
@@ -83,7 +83,7 @@ const initModel = () => {
   //   office.object.rotation.y = Math.PI;
   //   office.object.position.set(0, 0, 0);
   //   // model.position.set(80, 2, 90);
-  //   office.object.children.forEach((item: { name: string | number; }) => {
+  //   office.object.children.forEach((item: any) => {
   //     item.name = item.name.replace('zuo', '');
   //     if (item.name === 'ding') {
   //       item.name = 6;
@@ -105,20 +105,28 @@ const initModel = () => {
   //   // viewer.setRaycasterObjects(list);
   // });
 
-  // modelLoader.loadModelToScene('/models/40-v1.glb', baseModel => {
-  //   console.log(baseModel, '1111111');
-  //   // baseModel.setScalc(2);
-  //   const model = baseModel.gltf.scene;
-  //   model.position.set(80, 2, -40);
-  //   baseModel.openCastShadow();
-  // });
+  modelLoader.loadModelToScene('/models/plane.glb', baseModel => {
+    console.log(baseModel, '1111111');
+    
+    const model = baseModel.gltf.scene;
+    model.scale.set(0.0001 * 3, 0.0001 * 3, 0.0001 * 3)
+    model.position.set(0, 0, 0);
+    model.name = 'plane';
+    baseModel.openCastShadow();
+
+    const texture = baseModel.object.children[0].material.map
+    console.log(texture, 'texture-------');
+    const fnOnj = planeAnimate(texture);
+    viewer.addAnimate(fnOnj);
+  });
+  
 
   modelLoader.loadModelToScene('/models/datacenter.glb', baseModel => {
     console.log(baseModel, '1111111');
-    baseModel.setScalc(1.5);
-    baseModel.object.rotation.y = Math.PI / 2;
+    baseModel.setScalc(0.2);
+    // baseModel.object.rotation.y = Math.PI / 2;
     const model = baseModel.gltf.scene;
-    model.position.set(0, 0, -40);
+    model.position.set(0, 0, 0);
     model.name = '机房';
     baseModel.openCastShadow();
 
@@ -138,7 +146,27 @@ const initModel = () => {
   });
 };
 
-const onMouseClick = (intersects: any) => {
+const planeAnimate = (texture: any): Animate => {
+    console.log(texture, 'texture');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    const animateFn = {
+      fun: () => {
+        const count = texture.repeat.y;
+        if (count <= 10) {
+          texture.repeat.x += 0.01;
+          texture.repeat.y += 0.02;
+        } else {
+          texture.repeat.x = 0;
+          texture.repeat.y = 0;
+        }
+      },
+      content: viewer,
+    };
+    return animateFn;
+}
+
+const onMouseClick = (intersects: THREE.Intersection[]) => {
   if (!intersects.length) return;
   const selectedObject = intersects[0].object;
 
@@ -171,7 +199,7 @@ const onMouseClick = (intersects: any) => {
   
   // 点击其他区域
   if (!selectedObject.name.includes('zuo')) {
-    if (!isModelSelectName) {
+    if (!isModelSelectName && oldOffice) {
       let oldmodel = oldOffice.getObjectByName(modelMoveName);
       office.object.getObjectByName(modelMoveName).traverse(function (child: { isMesh: any; material: any; name: any; }) {
         if (child.isMesh) {
@@ -186,14 +214,13 @@ function checkIsRack (obj: any): boolean {
   return checkNameIncludes(obj, 'rack');
 }
 
-const onMouseMove = (intersects: any) => {
+const onMouseMove = (intersects: THREE.Intersection[]) => {
   if (!intersects.length) {
-    // boxHelperWrap.setVisible(false);
     popoverRef.value.setShow(false);
     boxHelperWrap.setVisible(false);
     return;
   }
-  const selectedObject = intersects[0].object;
+  const selectedObject = intersects[0].object || {};
   
   
   let selectedObjectName = '';
@@ -235,8 +262,8 @@ const onMouseMove = (intersects: any) => {
   // }
 
 
-  modelSelect.forEach((item) => {
-    if (item === selectedObject.parent.name) {
+  modelSelect.forEach((item: any) => {
+    if (item === selectedObject.parent?.name) {
       modelMoveName = item;
       if (modelSelectName === modelMoveName) return;
       office.object.getObjectByName(item).traverse(function (child: { isMesh: any; material: THREE.MeshPhongMaterial; }) {
@@ -252,7 +279,7 @@ const onMouseMove = (intersects: any) => {
         }
       });
     } else {
-      if (!isModelSelectName) {
+      if (!isModelSelectName && oldOffice) {
         let oldmodel = oldOffice.getObjectByName(item);
         office.object.getObjectByName(item).traverse(function (child: { isMesh: any; material: any; name: any; }) {
           if (child.isMesh) {
@@ -281,7 +308,7 @@ const selectOffice = (model: any) => {
   modelSelectName = model.name;
   let oldmodel = oldOffice.getObjectByName(modelSelectName);
   let modelSelectIndex = modelSelect.findIndex(v => v === modelSelectName);
-  office.object.children.forEach((child: { children: any[]; name: string; position: gsap.TweenTarget; userData: { position: boolean; }; }, index: number) => {
+  office.object.children.forEach((child: any, index: number) => {
     child.children.forEach((Mesh: any) => {
       if (child.name === modelSelectName) {
         child.children.forEach((Mesh: { material: any; name: any; }) => {

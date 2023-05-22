@@ -17,6 +17,11 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import SkyBoxs from '../SkyBoxs';
 
+export type Animate = {
+  fun: (arg: any) => any,
+  content: any,
+}
+
 export default class Viewer {
   public id: string;
   public viewerDom!: HTMLElement;
@@ -44,7 +49,7 @@ export default class Viewer {
     this.scene?.add(axis);
   }
 
-  public addAnimate(animate: any) {
+  public addAnimate(animate: Animate) {
     this.animateEventList.push(animate);
   }
   /**
@@ -126,10 +131,13 @@ export default class Viewer {
 
       this.updateDom();
       this.readerDom();
-
+      
       // 全局的公共动画函数，添加函数可同步执行
       this.animateEventList.forEach(event => {
-        event.fun && event.content && event.fun(event.content);
+        // event.fun && event.content && event.fun(event.content);
+        if (event.fun && event.content) {
+          event.fun(event.content);
+        }
       });
     };
 
@@ -144,7 +152,7 @@ export default class Viewer {
     // 渲染相机
     this.camera = new PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 2000);
     //设置相机位置
-    this.camera.position.set(-10, 10, -80);
+    this.camera.position.set(4, 2, -3);
     //设置相机方向
     this.camera.lookAt(0, 0, 0);
   }
@@ -157,7 +165,7 @@ export default class Viewer {
       logarithmicDepthBuffer: true,
       antialias: true, // true/false表示是否开启反锯齿
       alpha: true, // true/false 表示是否可以设置背景色透明
-      precision: 'highp', // highp/mediump/lowp 表示着色精度选择
+      precision: 'mediump', // highp/mediump/lowp 表示着色精度选择
       premultipliedAlpha: true, // true/false 表示是否可以设置像素深度（用来度量图像的分辨率）
       // preserveDrawingBuffer: false, // true/false 表示是否保存绘图缓冲
       // physicallyCorrectLights: true, // true/false 表示是否开启物理光照
@@ -176,7 +184,7 @@ export default class Viewer {
     );
     this.controls.enableDamping = false;
     this.controls.screenSpacePanning = false; // 定义平移时如何平移相机的位置 控制不上下移动
-    this.controls.minDistance = 10;
+    this.controls.minDistance = 2;
     this.controls.maxDistance = 1000;
     this.controls.addEventListener('change', ()=>{
       this.renderer.render(this.scene, this.camera);
@@ -185,7 +193,7 @@ export default class Viewer {
 
   private initSkybox() {
     if (!this.skyboxs) this.skyboxs = new SkyBoxs(this);
-    this.skyboxs.addSkybox();
+    this.skyboxs.addSkybox('night');
     this.skyboxs.addFog();
   }
 

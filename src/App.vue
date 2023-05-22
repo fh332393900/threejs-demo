@@ -1,16 +1,17 @@
 <template>
-  <Sence></Sence>
+  <div class="main">
+    <Layout></Layout>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import Sence from './components/Sence.vue';
+import Layout from './layout/index.vue';
 
 </script>
 
 <style>
 body, html {
-  padding: 0;
-  margin: 0;
+  background-color: #000;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -18,9 +19,17 @@ body, html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 10px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100vh;
+  /* margin-top: 10px; */
+  /* box-sizing: border-box; */
+  /* width: 100%; */
+}
+
+.main {
+  /* width: 100vw; */
+  /* height: 100%; */
+  /* background-image: linear-gradient(90deg, rgba(1, 53, 80, 0.3490196078) 1px, transparent 1px), linear-gradient(0deg, rgba(1, 53, 80, 0.3490196078) 1px, transparent 1px);
+  background-size: 30px 30px, 30px 30px; */
+  /* min-width: 850px; */
+  /* box-sizing: border-box; */
 }
 </style>

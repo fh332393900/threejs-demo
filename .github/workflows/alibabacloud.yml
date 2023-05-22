@@ -60,3 +60,15 @@ jobs:
         docker push "$REGISTRY/$NAMESPACE/$IMAGE:$TAG"
 
     # Deploy docker image
+    - name: Deploy docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }} 
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          docker stop threejs-demo
+          docker rm threejs-demo
+          docker rmi registry.cn-chengdu.aliyuncs.com/stevenfeng-prod/threejs-demo:latest
+          docker pull registry.cn-chengdu.aliyuncs.com/stevenfeng-prod/threejs-demo:latest
+          docker run -p 8083:80 -d --name threejs-demo registry.cn-chengdu.aliyuncs.com/stevenfeng-prod/threejs-demo:latest

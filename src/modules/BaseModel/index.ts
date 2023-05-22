@@ -4,6 +4,7 @@ import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type { Material } from 'three';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 import type Viewer from '../Viewer';
+import type { Animate } from '../Viewer';
 
 export default class BaseModel {
   protected viewer: Viewer;
@@ -15,7 +16,7 @@ export default class BaseModel {
   public animaIndex: number = -1;
   public mixer!: THREE.AnimationMixer;
   public clock: THREE.Clock;
-  public animaObject: any;
+  public animaObject!: Animate;
 
   constructor(gltf: GLTF, viewer: Viewer) {
     this.gltf = gltf;

@@ -58,3 +58,5 @@ jobs:
       run: |
         docker build --tag "$REGISTRY/$NAMESPACE/$IMAGE:$TAG" .
         docker push "$REGISTRY/$NAMESPACE/$IMAGE:$TAG"
+
+    # Deploy docker image

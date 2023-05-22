@@ -111,7 +111,7 @@ const initModel = () => {
     model.name = 'plane';
     baseModel.openCastShadow();
 
-    const texture = baseModel.object.children[0].material.map;
+    const texture = (baseModel.object.children[0] as any).material.map;
     console.log(texture, 'texture-------');
     const fnOnj = planeAnimate(texture);
     viewer.addAnimate(fnOnj);

@@ -13,6 +13,9 @@ import Layout from './layout/index.vue';
 body, html {
   background-color: #000;
 }
+body {
+  overflow: hidden;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

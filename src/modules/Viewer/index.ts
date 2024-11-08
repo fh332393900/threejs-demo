@@ -30,7 +30,7 @@ export default class Viewer {
   public renderer!: WebGLRenderer;
   public controls!: OrbitControls;
   public skyboxs!: SkyBoxs;
-  public animateEventList: any[] = [];
+  public animateEventList: Animate[] = [];
   public statsControls!: Stats;
   public raycaster!: Raycaster;
   public mouse!: Vector2;

@@ -30,7 +30,7 @@ export default class SkyBoxs {
    * @param skyType
    */
   public addSkybox (skyType: keyof typeof Sky = Sky.daytime) {
-    const path = `/skybox/${Sky[skyType]}/`; // 设置路径
+    const path = `${import.meta.env.VITE_PUBLIC_BASE_PATH || ''}/skybox/${Sky[skyType]}/`; // 设置路径
     const format = '.jpg'; // 设定格式
     this.setSkybox(path, format);
   }

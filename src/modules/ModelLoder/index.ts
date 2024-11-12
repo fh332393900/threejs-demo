@@ -26,7 +26,8 @@ export default class ModelLoder {
 
   /**模型加载到场景 */
   public loadModelToScene(url: string, callback: LoadModelCallbackFn<BaseModel>) {
-    this.loadModel(url, model => {
+    const publicUrl = `${publicPath}${url}`;
+    this.loadModel(publicUrl, model => {
       this.viewer.scene.add(model.object);
       callback && callback(model);
     });

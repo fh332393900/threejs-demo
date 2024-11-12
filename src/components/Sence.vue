@@ -104,7 +104,7 @@ const initModel = () => {
   //   viewer.setRaycasterObjects(list);
   // });
 
-  modelLoader.loadModelToScene('/threejs-demo/models/plane.glb', baseModel => {
+  modelLoader.loadModelToScene('/models/plane.glb', baseModel => {
     const model = baseModel.gltf.scene;
     model.scale.set(0.0001 * 3, 0.0001 * 3, 0.0001 * 3)
     model.position.set(0, 0, 0);
@@ -118,7 +118,7 @@ const initModel = () => {
   });
   
 
-  modelLoader.loadModelToScene('/threejs-demo/models/datacenter.glb', baseModel => {
+  modelLoader.loadModelToScene('/models/datacenter.glb', baseModel => {
     console.log(baseModel, '1111111');
     baseModel.setScalc(0.2);
     // baseModel.object.rotation.y = Math.PI / 2;

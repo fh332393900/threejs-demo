@@ -26,16 +26,14 @@ export default class ModelLoder {
 
   /**模型加载到场景 */
   public loadModelToScene(url: string, callback: LoadModelCallbackFn<BaseModel>) {
-    const publicUrl = `${publicPath}${url}`;
-    this.loadModel(publicUrl, model => {
+    this.loadModel(url, model => {
       this.viewer.scene.add(model.object);
       callback && callback(model);
     });
   }
 
   private loadModel(url: string, callback: LoadModelCallbackFn<BaseModel>) {
-    const publicUrl = `${publicPath}${url}`;
-    this.gltfLoader.load(publicUrl, gltf => {
+    this.gltfLoader.load(url, gltf => {
       const baseModel = new BaseModel(gltf, this.viewer);
       callback && callback(baseModel);
     });
